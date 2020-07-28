@@ -19,7 +19,7 @@ let getCurrentYear = () => {
   return moment.utc().format('YYYY');
 };
 
-console.log(getLocalTime() );
+//console.log(getLocalTime() );
 
 let convertToLocalTime = (time) => {
   return momenttz.tz(time, timeZone).format('LLLL');

@@ -1,7 +1,7 @@
 {
-    "name": "Issue Tracker Application",
+    "name": "Expense Splite Application",
     "version": "0.0.1",
-    "description": "Documentation for the issue tracker app",
-    "title": "Issue Tracker APIs",
+    "description": "Documentation for the expense splite app",
+    "title": "Expense Splite APIs",
     "url" : "http://localhost:3000"
   }

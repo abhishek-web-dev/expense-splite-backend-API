@@ -54,7 +54,7 @@ let createExpenseFunction = (req, res) => {
 				if (err) {
 					logger.error(
 						err.message,
-						'queryController: creatQueryFunction()-->createQuery()',
+						'expenseController: createExpenseFunction()-->createExpense()',
 						5
 					);
 					console.log(err);
@@ -80,7 +80,7 @@ let createExpenseFunction = (req, res) => {
 						if (err) {
 							logger.error(
 								err.message,
-								'queryController: creatQueryFunction()-->createQuery()',
+								'expenseController: createExpenseFunction()-->createExpense()',
 								5
 							);
 
@@ -112,18 +112,18 @@ let createExpenseFunction = (req, res) => {
 			res.send(apiResponse);
 		})
 		.catch((err) => {
-			logger.error(err.message, 'queryController: creatQueryFunction()', 5);
+			logger.error(err.message, 'expenseController: catch()', 5);
 			let apiResponse = response.generate(true, err.message, err.status, {});
 			res.send(apiResponse);
 		});
-}; // end create group function
+}; // end create expense function
 
 //function to get ten expenses
 let getTenExpensesFunction = (req, res) => {
 	if (check.isEmpty(req.body.groupId) || check.isEmpty(req.body.skip)) {
 		logger.error(
 			'UserId Field is Missing ',
-			'messageController: getTenMessages()',
+			'expenseController: getTenExpensesFunction()',
 			5
 		);
 		let apiResponse = response.generate(
@@ -143,18 +143,18 @@ let getTenExpensesFunction = (req, res) => {
 			.lean()
 			.exec((err, result) => {
 				if (err) {
-					logger.error(err.message, 'messageController: getTenMessages()', 10);
+					logger.error(err.message, 'expenseController: getTenExpensesFunction()', 10);
 					let apiResponse = response.generate(
 						true,
-						'Failed to find ten message!',
+						'Failed to find ten expenses!',
 						500,
 						null
 					);
 					res.send(apiResponse);
 				} else if (check.isEmpty(result)) {
 					logger.info(
-						'No Messages Found',
-						'messageController: getTenMessages()'
+						'No Expense Found',
+						'expenseController: getTenExpensesFunction()'
 					);
 					let apiResponse = response.generate(
 						true,
@@ -166,7 +166,7 @@ let getTenExpensesFunction = (req, res) => {
 				} else {
 					let apiResponse = response.generate(
 						false,
-						'All Expenses Found!',
+						'Ten Expenses Found!',
 						200,
 						result
 					);
@@ -175,14 +175,14 @@ let getTenExpensesFunction = (req, res) => {
 			});
 	}
 };
-// end get ten messages
+// end get ten expenses
 
 //function to get all expenses
 let getAllExpensesFunction = (req, res) => {
 	if (check.isEmpty(req.body.groupId)) {
 		logger.error(
-			'UserId Field is Missing ',
-			'messageController: getTenMessages()',
+			'groupId Field is Missing ',
+			'expenseController: getAllExpensesFunction()',
 			5
 		);
 		let apiResponse = response.generate(
@@ -199,7 +199,7 @@ let getAllExpensesFunction = (req, res) => {
 			.lean()
 			.exec((err, result) => {
 				if (err) {
-					logger.error(err.message, 'messageController: getTenMessages()', 10);
+					logger.error(err.message, 'expenseController: getAllExpensesFunction()', 10);
 					let apiResponse = response.generate(
 						true,
 						'Failed to find all expenses!',
@@ -209,8 +209,8 @@ let getAllExpensesFunction = (req, res) => {
 					res.send(apiResponse);
 				} else if (check.isEmpty(result)) {
 					logger.info(
-						'No Messages Found',
-						'messageController: getTenMessages()'
+						'No Expense Found',
+						'expenseController: getAllExpensesFunction()'
 					);
 					let apiResponse = response.generate(
 						true,
@@ -231,14 +231,14 @@ let getAllExpensesFunction = (req, res) => {
 			});
 	}
 };
-// end get ten messages
+// end function to get all expenses
 
 // function to get one expense
 let getOneExpenseDetailsFunction = (req, res) => {
 	if (check.isEmpty(req.body.expenseId)) {
 		logger.error(
-			'QueryId Field is Missing ',
-			'queryController: getOneQueryFunction()',
+			'expenseId Field is Missing ',
+			'expenseController: getOneExpenseDetailsFunction()',
 			5
 		);
 		let apiResponse = response.generate(
@@ -257,7 +257,7 @@ let getOneExpenseDetailsFunction = (req, res) => {
 				if (err) {
 					logger.error(
 						err.message,
-						'queryController: getOneQueryFunction()',
+						'expenseController: getOneExpenseDetailsFunction()',
 						10
 					);
 					let apiResponse = response.generate(
@@ -270,7 +270,7 @@ let getOneExpenseDetailsFunction = (req, res) => {
 				} else if (check.isEmpty(result)) {
 					logger.info(
 						'No Expense Found',
-						'queryController: getOneQueryFunction()'
+						'expenseController: getOneExpenseDetailsFunction()'
 					);
 					let apiResponse = response.generate(
 						true,
@@ -291,11 +291,11 @@ let getOneExpenseDetailsFunction = (req, res) => {
 			});
 	}
 };
-// end get one group
+// end get one expense
 
 module.exports = {
 	createExpenseFunction: createExpenseFunction,
 	getTenExpensesFunction: getTenExpensesFunction,
 	getOneExpenseDetailsFunction: getOneExpenseDetailsFunction,
-	getAllExpensesFunction: getAllExpensesFunction
+	getAllExpensesFunction: getAllExpensesFunction,
 };

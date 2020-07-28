@@ -5,7 +5,6 @@ const response = require('../libs/responseLib');
 const logger = require('../libs/loggerLib');
 const check = require('../libs/checkLib');
 
-
 /* Models */
 const groupModel = mongoose.model('group');
 const expenseModel = mongoose.model('expense');
@@ -50,7 +49,7 @@ let creatGroupFunction = (req, res) => {
 				if (err) {
 					logger.error(
 						err.message,
-						'queryController: creatQueryFunction()-->createQuery()',
+						'groupController: creatGroupFunction()-->createGroup()',
 						5
 					);
 					let apiResponse = response.generate(
@@ -74,7 +73,7 @@ let creatGroupFunction = (req, res) => {
 			res.send(apiResponse);
 		})
 		.catch((err) => {
-			logger.error(err.message, 'queryController: creatQueryFunction()', 5);
+			logger.error(err.message, 'groupController: creatGroupFunction()', 5);
 			let apiResponse = response.generate(true, err.message, err.status, {});
 			res.send(apiResponse);
 		});
@@ -90,10 +89,14 @@ let editGroupFunction = (req, res) => {
 				{ new: true },
 				(err, result) => {
 					if (err) {
-						logger.error(err.message, 'queryController: updateQuery()', 10);
+						logger.error(
+							err.message,
+							'groupController: editGroupFunction()',
+							10
+						);
 						let apiResponse = response.generate(
 							true,
-							'Failed to update query',
+							'Failed to update group',
 							500,
 							null
 						);
@@ -117,14 +120,14 @@ let editGroupFunction = (req, res) => {
 			res.send(apiResponse);
 		})
 		.catch((err) => {
-			logger.error(err.message, 'queryController: updateQuery()', 5);
+			logger.error(err.message, 'groupController: editGroupFunction()', 5);
 			let apiResponse = response.generate(true, err.message, err.status, {});
 			res.send(apiResponse);
 		});
 };
 // end edit Group Function
 
-//function to get all querys.
+//function to get all groups.
 let getTenGroupsFunction = (req, res) => {
 	groupModel
 		.find({ 'groupMemberIds.userId': req.body.userId })
@@ -135,7 +138,11 @@ let getTenGroupsFunction = (req, res) => {
 		.lean()
 		.exec((err, result) => {
 			if (err) {
-				logger.error(err.message, 'queryController: getAllQueryFunction()', 10);
+				logger.error(
+					err.message,
+					'groupController: getTenGroupsFunction()',
+					10
+				);
 				let apiResponse = response.generate(
 					true,
 					'Failed To Find Ten Group',
@@ -144,7 +151,10 @@ let getTenGroupsFunction = (req, res) => {
 				);
 				res.send(apiResponse);
 			} else if (check.isEmpty(result)) {
-				logger.info('No Query Found', 'queryController: getAllQueryFunction()');
+				logger.info(
+					'No Group Found',
+					'groupController: getTenGroupsFunction()'
+				);
 				let apiResponse = response.generate(true, 'No Group Found!', 200, []);
 				res.send(apiResponse);
 			} else {
@@ -163,8 +173,8 @@ let getTenGroupsFunction = (req, res) => {
 let getOneGroupDetailsFunction = (req, res) => {
 	if (check.isEmpty(req.body.groupId)) {
 		logger.error(
-			'QueryId Field is Missing ',
-			'queryController: getOneQueryFunction()',
+			'groupId Field is Missing ',
+			'groupController: getOneGroupDetailsFunction()',
 			5
 		);
 		let apiResponse = response.generate(
@@ -183,20 +193,20 @@ let getOneGroupDetailsFunction = (req, res) => {
 				if (err) {
 					logger.error(
 						err.message,
-						'queryController: getOneQueryFunction()',
+						'groupController: getOneGroupDetailsFunction()',
 						10
 					);
 					let apiResponse = response.generate(
 						true,
-						'Failed To Find query',
+						'Failed To Find One Group Details',
 						500,
 						null
 					);
 					res.send(apiResponse);
 				} else if (check.isEmpty(result)) {
 					logger.info(
-						'No Query Found',
-						'queryController: getOneQueryFunction()'
+						'No Group Found',
+						'groupController: getOneGroupDetailsFunction()'
 					);
 					let apiResponse = response.generate(true, 'No Group Found!', 404, []);
 					res.send(apiResponse);
@@ -238,7 +248,7 @@ let deleteGroupFunction = (req, res) => {
 						if (err) {
 							logger.error(
 								err.message,
-								'queryController: validateUserInput()',
+								'groupController: deleteGroupFunction()-->validateUserInput()',
 								10
 							);
 							let apiResponse = response.generate(
@@ -255,8 +265,6 @@ let deleteGroupFunction = (req, res) => {
 								result.map((item) => {
 									allExpenseIds.push(item.expenseId);
 								});
-								//allExpensesDetails = result;
-								console.log('all exp id--', allExpenseIds);
 								resolve(allExpenseIds);
 							}
 						}
@@ -271,7 +279,11 @@ let deleteGroupFunction = (req, res) => {
 				{ expenseId: { $in: allExpenseIds } },
 				(err, result) => {
 					if (err) {
-						logger.error(err.message, 'queryController: deleteQuery()', 10);
+						logger.error(
+							err.message,
+							'groupController:deleteGroupFunction()-->deleteAllHistory()',
+							10
+						);
 						let apiResponse = response.generate(
 							true,
 							'Failed To Delete History',
@@ -295,7 +307,7 @@ let deleteGroupFunction = (req, res) => {
 					if (err) {
 						logger.error(
 							err.message,
-							'queryController: deleteAllMessage()',
+							'groupController:deleteGroupFunction()-->deleteAllExpense()',
 							10
 						);
 						let apiResponse = response.generate(
@@ -317,7 +329,11 @@ let deleteGroupFunction = (req, res) => {
 		return new Promise((resolve, reject) => {
 			messageModel.deleteMany({ groupId: groupId }, (err, result) => {
 				if (err) {
-					logger.error(err.message, 'queryController: deleteAllMessage()', 10);
+					logger.error(
+						err.message,
+						'groupController:deleteGroupFunction()-->deleteAllGroupMessage()',
+						10
+					);
 					let apiResponse = response.generate(
 						true,
 						'Failed To Delete all Group Message.',
@@ -336,7 +352,11 @@ let deleteGroupFunction = (req, res) => {
 		return new Promise((resolve, reject) => {
 			groupModel.deleteOne({ groupId: groupId }, (err, result) => {
 				if (err) {
-					logger.error(err.message, 'queryController: deleteAllMessage()', 10);
+					logger.error(
+						err.message,
+						'groupController:deleteGroupFunction()-->deleteGroup()',
+						10
+					);
 					let apiResponse = response.generate(
 						true,
 						'Failed To Delete Group.',

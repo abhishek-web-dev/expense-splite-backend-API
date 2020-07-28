@@ -3,19 +3,17 @@ const response = require('../libs/responseLib');
 const logger = require('../libs/loggerLib');
 const check = require('../libs/checkLib');
 
-
 /* Models */
-//const queryModel = mongoose.model('query');
 const historyModel = mongoose.model('history');
 
 /**
- * function to get ten notification.
+ * function to get ten history.
  */
 let getTenHistoryFunction = (req, res) => {
 	if (check.isEmpty(req.body.expenseId)) {
 		logger.error(
-			'userId Field is Missing ',
-			'notificationController: getTenNotificationFunction()',
+			'expenseId Field is Missing ',
+			'historyController: getTenHistoryFunction()',
 			5
 		);
 		let apiResponse = response.generate(
@@ -37,7 +35,7 @@ let getTenHistoryFunction = (req, res) => {
 				if (err) {
 					logger.error(
 						err.message,
-						'notificationController: getTenNotificationFunction()',
+						'historyController: getTenHistoryFunction()',
 						10
 					);
 					let apiResponse = response.generate(
@@ -49,8 +47,8 @@ let getTenHistoryFunction = (req, res) => {
 					res.send(apiResponse);
 				} else if (check.isEmpty(result)) {
 					logger.info(
-						'No Notification Found!',
-						'notificationController: getTenNotificationFunction()'
+						'No History Found!',
+						'historyController: getTenHistoryFunction()'
 					);
 					let apiResponse = response.generate(
 						true,
@@ -70,11 +68,10 @@ let getTenHistoryFunction = (req, res) => {
 				}
 			});
 	}
-}; 
-// end get ten notification
-
+};
+// end get ten History
 
 module.exports = {
-	getTenHistoryFunction: getTenHistoryFunction
-}; 
+	getTenHistoryFunction: getTenHistoryFunction,
+};
 //end exports

@@ -1,5 +1,3 @@
-const express = require('express');
-const router = express.Router();
 const expenseController = require('./../../app/controllers/expenseController');
 const appConfig = require('./../../config/appConfig');
 const tokenAuth = require('../middlewares/tokenAuth');
@@ -9,7 +7,7 @@ module.exports.setRouter = (app) => {
 
 	// defining routes.
 
-	//params: authToken, message, senderName, senderId, queryId
+	//params: authToken, groupId, ename, amount, creatorId, creatorName, updatedById, updatedByName, contributer, distributer
 	app.post(
 		`${baseUrl}/create/expense`,
 		tokenAuth.isAuthorized,
@@ -18,39 +16,49 @@ module.exports.setRouter = (app) => {
 	/**
        * @apiGroup create
        * @apiVersion  1.0.0
-       * @api {post} /api/v1/users/create/message api to create a new message
+       * @api {post} /api/v1/users/create/expense api to create a new expense
        *
        *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)
-       *@apiParam {String} senderId sender id to create a new mesage.(Send senderId as a body parameter)
-       *@apiParam {String} message message to create a new mesage.(Send message as a body parameter)
-       *@apiParam {String} senderName sender name to create a new mesage.(Send senderName as a body parameter)
-       *@apiParam {String} queryId query Id to create a new mesage.(Send senderId as a body parameter)
+       *@apiParam {String} groupId group id to create a new group.(Send groupId as a body parameter)
+       *@apiParam {String} ename expense name to create a new expense.(Send message as a body parameter)
+       *@apiParam {String} amount total expense amount .(Send amount as a body parameter)
+       *@apiParam {String} creatorId creator Id to create a new expense.(Send creatorId as a body parameter)
+       *@apiParam {String} creatorName creator name to create a new expense.(Send creatorName as a body parameter)
+       *@apiParam {String} updatedById userId of last updated person.(Send updatedById as a body parameter)
+       *@apiParam {String} updatedByName name of last updated person.(Send updatedByName as a body parameter)
+       *@apiParam {String} contributer all user details who will contribute in expense.(Send contributer as a body parameter)
+       *@apiParam {String} distributer all user name who will pay for expense.(Send distributer as a body parameter)
        *@apiSuccess {object} myResponse shows error status, message, http status code, result.
        * 
        *@apiSuccessExample {object} Success-Response:
              {
            "error": false,
-           "message": "Message created Successfully",
+           "message": "Expense created Successfully",
            "status": 200,
            "data": {
                createdOn:2020-06-20T00:56:22.000+00:00
-               messageId:"7GpzIZ5jc"
-               queryId:"7GpzIZpld"
-               message:"edited"
-               senderName:"abhishek"
-               senderId:"Sw-vulMJ6"
+               expenseId:"7GpzIZ5jc"
+               groupId:"7GpzIZpld"
+               amount:500
+               creatorName:"abhishek"
+               creatorId:"Sw-vulMJ6"
+               ename:"Shoping"
+               updatedById:"7GpzIZfht"
+               updatedByName:"abhishek"
+               contributer:["7GpzIZpld","7GpzIZpsc"]
+               distributer:["7GpzIZkdn","7GpzIZpms"]
            }
          }
         @apiErrorExample {json} Error-Response:
      * {
         "error": true,
-        "message": "Failed To Create New Message.",
+        "message": "Failed To Create New Expense.",
         "status": 500,
         "data": null
        }
       */
 
-	//params: authToken, queryId, skip
+	//params: authToken, expenseId, skip
 	app.post(
 		`${baseUrl}/get/ten/expenses`,
 		tokenAuth.isAuthorized,
@@ -59,37 +67,42 @@ module.exports.setRouter = (app) => {
 	/**
        * @apiGroup read
        * @apiVersion  1.0.0
-       * @api {post} /api/v1/users/get/ten/message api to get ten message
+       * @api {post} /api/v1/users/get/ten/expenses api to get ten expense
        *
        *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)
-       *@apiParam {String} queryId query id to get all message.(Send userId as a body parameter)
-       *@apiParam {Number} skip to get next 10 message.(skip as a body parameter)
+       *@apiParam {String} expenseId expense id to get ten expense.(Send expenseId as a body parameter)
+       *@apiParam {Number} skip to get next 10 expense.(skip as a body parameter)
        *@apiSuccess {object} myResponse shows error status, message, http status code, result.
        * 
        *@apiSuccessExample {object} Success-Response:
              {
            "error": false,
-           "message": "Ten notification Found Successfully",
+           "message": "Ten Expense Found Successfully",
            "status": 200,
            "data": [{
                createdOn:2020-06-20T00:56:22.000+00:00
-               messageId:"7GpzIZ5jc"
-               queryId:"7GpzIZpld"
-               message:"edited"
-               senderName:"abhishek"
-               senderId:"Sw-vulMJ6"
+               expenseId:"7GpzIZ5jc"
+               groupId:"7GpzIZpld"
+               amount:500
+               creatorName:"abhishek"
+               creatorId:"Sw-vulMJ6"
+               ename:"Shoping"
+               updatedById:"7GpzIZfht"
+               updatedByName:"abhishek"
+               contributer:["7GpzIZpld","7GpzIZpsc"]
+               distributer:["7GpzIZkdn","7GpzIZpms"]
            }]
          }
         @apiErrorExample {json} Error-Response:
      * {
         "error": true,
-        "message": "Failed To Get Ten Messages.",
+        "message": "Failed To Get Ten Expense.",
         "status": 500,
         "data": null
        }
       */
 
-	//params: authToken, queryId, skip
+	//params: authToken, expenseId
 	app.post(
 		`${baseUrl}/get/all/expenses`,
 		tokenAuth.isAuthorized,
@@ -98,31 +111,35 @@ module.exports.setRouter = (app) => {
 	/**
        * @apiGroup read
        * @apiVersion  1.0.0
-       * @api {post} /api/v1/users/get/ten/message api to get ten message
+       * @api {post} /api/v1/users/get/all/expenses api to get all expense
        *
        *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)
-       *@apiParam {String} queryId query id to get all message.(Send userId as a body parameter)
-       *@apiParam {Number} skip to get next 10 message.(skip as a body parameter)
+       *@apiParam {String} expenseId expense id to get all expense.(Send expenseId as a body parameter)
        *@apiSuccess {object} myResponse shows error status, message, http status code, result.
        * 
        *@apiSuccessExample {object} Success-Response:
              {
            "error": false,
-           "message": "Ten notification Found Successfully",
+           "message": "All Expense Found Successfully",
            "status": 200,
            "data": [{
                createdOn:2020-06-20T00:56:22.000+00:00
-               messageId:"7GpzIZ5jc"
-               queryId:"7GpzIZpld"
-               message:"edited"
-               senderName:"abhishek"
-               senderId:"Sw-vulMJ6"
+               expenseId:"7GpzIZ5jc"
+               groupId:"7GpzIZpld"
+               amount:500
+               creatorName:"abhishek"
+               creatorId:"Sw-vulMJ6"
+               ename:"Shoping"
+               updatedById:"7GpzIZfht"
+               updatedByName:"abhishek"
+               contributer:["7GpzIZpld","7GpzIZpsc"]
+               distributer:["7GpzIZkdn","7GpzIZpms"]
            }]
          }
         @apiErrorExample {json} Error-Response:
      * {
         "error": true,
-        "message": "Failed To Get Ten Messages.",
+        "message": "Failed To Get All Expenses",
         "status": 500,
         "data": null
        }
@@ -138,37 +155,37 @@ module.exports.setRouter = (app) => {
 	/**
      * @apiGroup read
      * @apiVersion  1.0.0
-     * @api {post} /api/v1/users/get/one/query api for get one query details
+     * @api {post} /api/v1/users/get/one/expense api for get one expense details
      *
      * @apiParam {string} authToken send authToken. (body params) (required)
-	 * @apiParam {string} queryId send query id. (body params) (required)
+	 * @apiParam {string} expenseId send expense id. (body params) (required)
      *
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
      * @apiSuccessExample {object} Success-Response:
          {
             "error": false,
-            "message": "All Messages Found!",
+            "message": "One Expense Details Found!",
             "status": 200,
             "data": {  
-               creatorId: "Sw-vulMJ6"
-               creatorName: "abhishek"
-               description: "s<font face="Arial">sdf</font>"
-               image: "http://localhost:3000/images/checksum_cn_3rd_unit.png"
-               queryId: "Q1qu_ngO3"
-               recieverId: "12345"
-               recieverName: "abhi"
-               status: "In-Progress"
-               title: "testing 1"
-               userWatchlistIds: ["Q1qu_ngO3"]
-               createdOn: "2020-06-17T06:18:13.000Z"
+               createdOn:2020-06-20T00:56:22.000+00:00
+               expenseId:"7GpzIZ5jc"
+               groupId:"7GpzIZpld"
+               amount:500
+               creatorName:"abhishek"
+               creatorId:"Sw-vulMJ6"
+               ename:"Shoping"
+               updatedById:"7GpzIZfht"
+               updatedByName:"abhishek"
+               contributer:["7GpzIZpld","7GpzIZpsc"]
+               distributer:["7GpzIZkdn","7GpzIZpms"]
             }
 		
         }
        @apiErrorExample {json} Error-Response:
 	 * {
 	    "error": true,
-	    "message": "Failed To Find All Message",
+	    "message": "Failed To Find One Expense",
 	    "status": 500,
 	    "data": null
 	   }

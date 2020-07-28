@@ -1,20 +1,16 @@
-const express = require('express');
-const router = express.Router();
-const userController = require("./../../app/controllers/userLoginController");
-const appConfig = require("./../../config/appConfig");
+const userController = require('./../../app/controllers/userLoginController');
+const appConfig = require('./../../config/appConfig');
 const tokenAuth = require('../middlewares/tokenAuth');
 
 module.exports.setRouter = (app) => {
+	let baseUrl = `${appConfig.apiVersion}/users`;
 
-    let baseUrl = `${appConfig.apiVersion}/users`;
+	// defining routes.
 
-    // defining routes.
+	// params: firstName, lastName, email, number, password
+	app.post(`${baseUrl}/signup`, userController.signUpFunction);
 
-
-    // params: firstName, lastName, email, mobileNumber, password
-    app.post(`${baseUrl}/signup`, userController.signUpFunction);
-
-    /**
+	/**
      * @apiGroup create
      * @apiVersion  1.0.0
      * @api {post} /api/v1/users/signup api for user signup.
@@ -22,7 +18,7 @@ module.exports.setRouter = (app) => {
      * @apiParam {string} name name of the user. (body params) (required)
      * @apiParam {string} password password of the user. (body params) (required)
      * @apiParam {string} email email of the user. (body params) (required)
-     * @apiParam {string} mobileNumber mobile number of the user. (body params) (required)
+     * @apiParam {string} number mobile number of the user with country code. (body params) (required)
      *
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
@@ -42,18 +38,16 @@ module.exports.setRouter = (app) => {
 	    "data": null
 	   }
 	 */
-    
 
+	// params: email id, password.
+	app.post(`${baseUrl}/login`, userController.loginFunction);
 
-    // params: userId, password.
-    app.post(`${baseUrl}/login`, userController.loginFunction);
-
-    /**
+	/**
      * @apiGroup read
      * @apiVersion  1.0.0
      * @api {post} /api/v1/users/login api to login user
      *
-     * @apiParam {string} userId userId of the user. (required)
+     * @apiParam {string} email email id of the user. (required)
      *@apiParam {string} password password of the user. (required)
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
@@ -79,10 +73,9 @@ module.exports.setRouter = (app) => {
 	   }
     */
 
-
-    // params: authToken, userId
-    app.post(`${baseUrl}/logout`,tokenAuth.isAuthorized, userController.logout);
-    /**
+	// params: authToken, userId
+	app.post(`${baseUrl}/logout`, tokenAuth.isAuthorized, userController.logout);
+	/**
      * @apiGroup delete
      * @apiVersion  1.0.0
      * @api {post} /api/v1/users/logout api to logout user
@@ -108,9 +101,13 @@ module.exports.setRouter = (app) => {
 	   }
     */
 
-      //params: authToken 
-      app.post(`${baseUrl}/get/all/user`,tokenAuth.isAuthorized, userController.getAllUsersFunction);
-      /**
+	//params: authToken
+	app.post(
+		`${baseUrl}/get/all/user`,
+		tokenAuth.isAuthorized,
+		userController.getAllUsersFunction
+	);
+	/**
        * @apiGroup read
        * @apiVersion  1.0.0
        * @api {post} /api/v1/users/get/all/user api to get all users id
@@ -137,5 +134,4 @@ module.exports.setRouter = (app) => {
         "data": null
        }
       */
-
 };

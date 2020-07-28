@@ -1,8 +1,5 @@
-const express = require('express');
-const router = express.Router();
 const forgetPassController = require('./../../app/controllers/forgetPasswordController');
 const appConfig = require('./../../config/appConfig');
-const tokenAuth = require('../middlewares/tokenAuth');
 
 module.exports.setRouter = (app) => {
 	let baseUrl = `${appConfig.apiVersion}/users`;
@@ -17,71 +14,59 @@ module.exports.setRouter = (app) => {
 	/**
        * @apiGroup create
        * @apiVersion  1.0.0
-       * @api {post} /api/v1/users/create/message api to create a new message
+       * @api {post} /api/v1/users/generate/forget/password/code api to create a new forget password code
        *
-       *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)
-       *@apiParam {String} senderId sender id to create a new mesage.(Send senderId as a body parameter)
-       *@apiParam {String} message message to create a new mesage.(Send message as a body parameter)
-       *@apiParam {String} senderName sender name to create a new mesage.(Send senderName as a body parameter)
-       *@apiParam {String} queryId query Id to create a new mesage.(Send senderId as a body parameter)
-       *@apiSuccess {object} myResponse shows error status, message, http status code, result.
+       *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)(required)
+       *@apiParam {String} userId user id .(Send userId as a body parameter)(required)
+       *@apiParam {String} name user name to create a new passcode.(Send user name as a body parameter)(required)
+       *@apiParam {String} email user email to create a new passcode.(Send user email as a body parameter)(required)
        * 
        *@apiSuccessExample {object} Success-Response:
              {
            "error": false,
-           "message": "Message created Successfully",
+           "message": "Passcode Generated Successfully",
            "status": 200,
            "data": {
                createdOn:2020-06-20T00:56:22.000+00:00
-               messageId:"7GpzIZ5jc"
+               userId:"7GpzIZ5jc"
                queryId:"7GpzIZpld"
-               message:"edited"
-               senderName:"abhishek"
-               senderId:"Sw-vulMJ6"
+               email:"testing@gmail.com"
+               name:"abhishek"
            }
          }
         @apiErrorExample {json} Error-Response:
      * {
         "error": true,
-        "message": "Failed To Create New Message.",
+        "message": "Failed To Generate New Passcode.",
         "status": 500,
         "data": null
        }
       */
 
-	//params: authToken, queryId, skip
+	//params: authToken, userId
 	app.post(
 		`${baseUrl}/update/password`,
 		forgetPassController.updatePasswordFunction
 	);
 	/**
-       * @apiGroup read
+       * @apiGroup update
        * @apiVersion  1.0.0
-       * @api {post} /api/v1/users/get/ten/message api to get ten message
+       * @api {post} /api/v1/users/update/password api to update user password
        *
-       *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)
-       *@apiParam {String} queryId query id to get all message.(Send userId as a body parameter)
-       *@apiParam {Number} skip to get next 10 message.(skip as a body parameter)
-       *@apiSuccess {object} myResponse shows error status, message, http status code, result.
+       *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)(required)
+       *@apiParam {String} userId user id to update password.(Send userId as a body parameter)(required)
        * 
        *@apiSuccessExample {object} Success-Response:
              {
            "error": false,
-           "message": "Ten notification Found Successfully",
+           "message": "User Password Has Updated Successfully",
            "status": 200,
-           "data": [{
-               createdOn:2020-06-20T00:56:22.000+00:00
-               messageId:"7GpzIZ5jc"
-               queryId:"7GpzIZpld"
-               message:"edited"
-               senderName:"abhishek"
-               senderId:"Sw-vulMJ6"
-           }]
+           "data": {}
          }
         @apiErrorExample {json} Error-Response:
      * {
         "error": true,
-        "message": "Failed To Get Ten Messages.",
+        "message": "Failed To Update User Password",
         "status": 500,
         "data": null
        }

@@ -130,7 +130,7 @@ let getTenMessages = (req, res) => {
 				} else {
 					let apiResponse = response.generate(
 						false,
-						'All Messages Found!',
+						'Ten Messages Found!',
 						200,
 						result
 					);

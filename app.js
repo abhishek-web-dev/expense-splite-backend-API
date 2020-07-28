@@ -5,8 +5,6 @@ const logger = require('./app/libs/loggerLib');
 const routeLoggerMiddleware = require('./app/middlewares/routeLogger.js');
 const globalErrorMiddleware = require('./app/middlewares/appErrorHandler');
 
-
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -14,12 +12,7 @@ const app = express();
 const http = require('http');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const helmet = require("helmet");
-
-// const test = require('./app/libs/email');
-// test.sendEmailFunction('ravanisback2019@gmail.com','Abhishek','Welcome Email','');
-// Make "public" Folder Publicly Available
-//app.use(express.static(path.join(__dirname, 'public')));
+const helmet = require('helmet');
 
 app.use(helmet());
 app.use(morgan('dev'));
@@ -33,7 +26,6 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
-
 
 const modelsPath = './app/models';
 const routesPath = './app/routes';
@@ -76,17 +68,15 @@ app.use(globalErrorMiddleware.globalNotFoundHandler);
 
 const server = http.createServer(app);
 // start listening to http server
-console.log(appConfig);
-//console.log(app);
+
 server.listen(appConfig.port);
 server.on('error', onError);
 server.on('listening', onListening);
 // end server listening code
 
-// socket io connection handler 
-const socketLib = require("./app/libs/socketLib");
+// socket io connection handler
+const socketLib = require('./app/libs/socketLib');
 const socketServer = socketLib.setServer(server);
-
 
 /**
  * Event listener for HTTP server "error" event.

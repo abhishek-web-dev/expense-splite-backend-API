@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const shortid = require('shortid');
 const logger = require('./loggerLib.js');
 const events = require('events');
-const response = require('./responseLib');
 const time = require('./timeLib.js');
 const sendEmail = require('./email');
 
@@ -23,12 +22,8 @@ let setServer = (server) => {
 	let myIo = io.of('/expense');
 
 	myIo.on('connection', (socket) => {
-		console.log('server socket connected');
-
 		// update expense event
 		socket.on('expense-update', (data) => {
-			console.log('socket expense-update called');
-
 			let onecopydata = { message: data.message };
 
 			temp1 = [...data.contributer, ...data.distributer];
@@ -40,12 +35,9 @@ let setServer = (server) => {
 					}
 				}
 			}
+			// call event emitter to update expense
 			updateEventEmitter.emit('update-expense', data);
-			sendEmail.sendEmailFunction(
-				"ravanisback2019@gmail.com",
-				`Buy Food Expense has updated by abhishek`,
-				`Hi abhishek`
-			);
+
 			// emit notification to all person
 			if (temp1.length) {
 				temp1.map((item) => {
@@ -60,7 +52,7 @@ let setServer = (server) => {
 							} else {
 								// send email notification
 								let message = `<p>Hi ${result.name},</p> </br>
-                                              <p> ${onecopydata.message}</p></br>
+                                              <p> ${onecopydata.message}.</p></br>
                                               <p>Thanks,</p><br>
                                               <p>Expense Splitter Team!</p>`;
 								sendEmail.sendEmailFunction(
@@ -77,10 +69,9 @@ let setServer = (server) => {
 
 		// delete expense
 		socket.on('expense-delete', (data) => {
-			console.log('socket expense-delete called');
-
 			let onecopydata = { message: data.message };
 
+			// call event emitter to delete expense
 			deleteEventEmitter.emit('delete-expense', data);
 
 			// emit notification to all person
@@ -95,7 +86,7 @@ let setServer = (server) => {
 							} else {
 								// send email notification
 								let message = `<p>Hi ${result.name},</p> </br>
-                                              <p> ${onecopydata.message}</p></br>
+                                              <p> ${onecopydata.message}.</p></br>
                                               <p>Thanks,</p><br>
                                               <p>Expense Splitter Team!</p>`;
 								sendEmail.sendEmailFunction(
@@ -147,22 +138,19 @@ updateEventEmitter.on('update-expense', (data) => {
 
 // updating expense to database.
 deleteEventEmitter.on('delete-expense', (data) => {
-    console.log("delete expense event emmiter has called");
-	
 	// delete all expense history
-	historyModel.deleteMany({expenseId:data.expenseId},(err,result)=>{
-		if(err){
+	historyModel.deleteMany({ expenseId: data.expenseId }, (err, result) => {
+		if (err) {
 			console.log(err);
 		}
 	});
 
 	// delete one expense
-	expenseModel.deleteOne({expenseId:data.expenseId},(err,result)=>{
-		if(err){
+	expenseModel.deleteOne({ expenseId: data.expenseId }, (err, result) => {
+		if (err) {
 			console.log(err);
 		}
 	});
-
 }); // end of updating expense.
 
 module.exports = {

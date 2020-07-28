@@ -63,7 +63,7 @@ let generateForgetPassCodeFunction = (req, res) => {
 				if (err) {
 					logger.error(
 						err.message,
-						'queryController: creatQueryFunction()-->createQuery()',
+						'forgetPasswordController: generateForgetPassCodeFunction()-->sendForgetPassCode()',
 						5
 					);
 					console.log(err);
@@ -105,11 +105,15 @@ let generateForgetPassCodeFunction = (req, res) => {
 			res.send(apiResponse);
 		})
 		.catch((err) => {
-			logger.error(err.message, 'queryController: creatQueryFunction()', 5);
+			logger.error(
+				err.message,
+				'forgetPasswordController:generateForgetPassCodeFunction()',
+				5
+			);
 			let apiResponse = response.generate(true, err.message, err.status, {});
 			res.send(apiResponse);
 		});
-}; // end create group function
+}; // end generate forget password code function
 
 // update user password function
 let updatePasswordFunction = (req, res) => {
@@ -157,7 +161,11 @@ let updatePasswordFunction = (req, res) => {
 				{ $set: { password: passwordLib.hashpassword(req.body.password) } },
 				(err, result) => {
 					if (err) {
-						logger.error(err.message, 'queryController: updateQuery()', 10);
+						logger.error(
+							err.message,
+							'forgetPasswordController:updatePasswordFunction()-->updatePassword()',
+							10
+						);
 						let apiResponse = response.generate(
 							true,
 							'Failed to update password.',
@@ -188,7 +196,11 @@ let updatePasswordFunction = (req, res) => {
 				{ codeId: req.body.code },
 				(err, result) => {
 					if (err) {
-						logger.error(err.message, 'queryController: updateQuery()', 10);
+						logger.error(
+							err.message,
+							'forgetPasswordController:updatePasswordFunction()-->deleteForgetCode()',
+							10
+						);
 						let apiResponse = response.generate(
 							true,
 							'Failed to detele code.',
@@ -217,12 +229,12 @@ let updatePasswordFunction = (req, res) => {
 			res.send(apiResponse);
 		})
 		.catch((err) => {
-			logger.error(err.message, 'queryController: updateQuery()', 5);
+			logger.error(err.message, 'forgetPasswordController: catch()', 5);
 			let apiResponse = response.generate(true, err.message, err.status, {});
 			res.send(apiResponse);
 		});
 };
-// end edit Group Function
+// end update user password function
 
 module.exports = {
 	generateForgetPassCodeFunction: generateForgetPassCodeFunction,

@@ -1,16 +1,12 @@
-const express = require('express');
-const router = express.Router();
 const groupController = require('../controllers/groupController');
 const appConfig = require('../../config/appConfig');
 const tokenAuth = require('../middlewares/tokenAuth');
-const multer = require('multer');
-const path = require('path');
 
 // defining routes.
 module.exports.setRouter = (app) => {
 	let baseUrl = `${appConfig.apiVersion}/users`;
 
-	// params: title, status, description, recieverName, recieverId, creatorName, creatorId, image
+	// params: groupId, gname, creatorId, creatorName, groupMemberIds
 	app.post(
 		`${baseUrl}/create/group`,
 		tokenAuth.isAuthorized,
@@ -20,23 +16,20 @@ module.exports.setRouter = (app) => {
 	/**
      * @apiGroup create
      * @apiVersion  1.0.0
-     * @api {post} /api/v1/users/create/group api for query creation
+     * @api {post} /api/v1/users/create/group api for group creation
      *
-     * @apiParam {string} title title of the query. (body params) (required)
-     * @apiParam {string} status status of the query. (body params) (required)
-     * @apiParam {string} description description of the query. (body params) (required)
-     * @apiParam {string} recieverName reciever name . (body params) (required)
-     * @apiParam {string} recieverId reciever id . (body params) (required)
+     * @apiParam {string} groupId group Id of the group. (body params) (required)
+     * @apiParam {string} gname group name of the group. (body params) (required)
      * @apiParam {string} creatorName creator name . (body params) (required)
      * @apiParam {string} creatorId creator id . (body params) (required)
-     * @apiParam {string} image image of the query. (body params)
+     * @apiParam {string} groupMemberIds group member ids of the group. (body params)
      *
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
      * @apiSuccessExample {object} Success-Response:
          {
             "error": false,
-            "message": "Query has created Successfully",
+            "message": "Group has created Successfully",
             "status": 200,
             "data": {}
 
@@ -50,7 +43,7 @@ module.exports.setRouter = (app) => {
 	   }
 	 */
 
-	// params: authToken
+	// params: authToken , skip
 	app.post(
 		`${baseUrl}/get/ten/groups`,
 		tokenAuth.isAuthorized,
@@ -60,41 +53,37 @@ module.exports.setRouter = (app) => {
 	/**
      * @apiGroup read
      * @apiVersion  1.0.0
-     * @api {post} /api/v1/users/get/all/query api for get all query details
+     * @api {post} /api/v1/users/get/ten/groups api for get ten group details
      *
      * @apiParam {string} authToken send authToken. (body params) (required)
+     * @apiParam {string} skip send skip to get ten groups. (body params) (required)
      *
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
      * @apiSuccessExample {object} Success-Response:
          {
             "error": false,
-            "message": "All Messages Found!",
+            "message": "Ten groups Found!",
             "status": 200,
             "data":[{  
-               creatorId: "Sw-vulMJ6"
+               groupId: "Sw-vulMJ6"
                creatorName: "abhishek"
-               description: "s<font face="Arial">sdf</font>"
-               image: "http://localhost:3000/images/checksum_cn_3rd_unit.png"
-               queryId: "Q1qu_ngO3"
-               recieverId: "12345"
-               recieverName: "abhi"
-               status: "In-Progress"
-               title: "testing 1"
-               userWatchlistIds: ["Q1qu_ngO3"]
+               gname: "Shoping group"
+               creatorId: "Sw-vulMas"
+               groupMemberIds: ["Q1qu_ngO3"]
                createdOn: "2020-06-17T06:18:13.000Z"
             }] 
         }
        @apiErrorExample {json} Error-Response:
 	 * {
 	    "error": true,
-	    "message": "Failed To Find All Message",
+	    "message": "Failed To Find Ten Groups",
 	    "status": 500,
 	    "data": null
 	   }
 	 */
 
-	//  get one query data
+	//  get one group data
 	app.post(
 		`${baseUrl}/get/one/group`,
 		tokenAuth.isAuthorized,
@@ -104,29 +93,24 @@ module.exports.setRouter = (app) => {
 	/**
      * @apiGroup read
      * @apiVersion  1.0.0
-     * @api {post} /api/v1/users/get/one/query api for get one query details
+     * @api {post} /api/v1/users/get/one/group api for get one group details
      *
      * @apiParam {string} authToken send authToken. (body params) (required)
-	 * @apiParam {string} queryId send query id. (body params) (required)
+	 * @apiParam {string} groupId send group id. (body params) (required)
      *
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
      * @apiSuccessExample {object} Success-Response:
          {
             "error": false,
-            "message": "All Messages Found!",
+            "message": "One Group Details Found!",
             "status": 200,
             "data": {  
-               creatorId: "Sw-vulMJ6"
+               groupId: "Sw-vulMJ6"
                creatorName: "abhishek"
-               description: "s<font face="Arial">sdf</font>"
-               image: "http://localhost:3000/images/checksum_cn_3rd_unit.png"
-               queryId: "Q1qu_ngO3"
-               recieverId: "12345"
-               recieverName: "abhi"
-               status: "In-Progress"
-               title: "testing 1"
-               userWatchlistIds: ["Q1qu_ngO3"]
+               gname: "Shoping group"
+               creatorId: "Sw-vulMas"
+               groupMemberIds: ["Q1qu_ngO3"]
                createdOn: "2020-06-17T06:18:13.000Z"
             }
 		
@@ -134,7 +118,7 @@ module.exports.setRouter = (app) => {
        @apiErrorExample {json} Error-Response:
 	 * {
 	    "error": true,
-	    "message": "Failed To Find All Message",
+	    "message": "Failed To Find One Group",
 	    "status": 500,
 	    "data": null
 	   }
@@ -150,21 +134,20 @@ module.exports.setRouter = (app) => {
 	/**
      * @apiGroup update
      * @apiVersion  1.0.0
-     * @api {post} /api/v1/users/edit/query api for edit query.
+     * @api {post} /api/v1/users/edit/group api for edit group.
      *
-     * @apiParam {string} title title of the query. (body params) 
-     * @apiParam {string} status status of the query. (body params) 
-     * @apiParam {string} description description of the query. (body params) 
-     * @apiParam {string} recieverName reciever name . (body params) (required)
-     * @apiParam {string} recieverId reciever id . (body params) (required)
-     * @apiParam {string} image image of the query. (body params)
+     * @apiParam {string} groupId group Id of the group. (body params) (required)
+     * @apiParam {string} gname group name of the group. (body params) 
+     * @apiParam {string} creatorName creator name . (body params) 
+     * @apiParam {string} creatorId creator id . (body params) 
+     * @apiParam {string} groupMemberIds group member ids of the group. 
      *
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
      * @apiSuccessExample {object} Success-Response:
          {
             "error": false,
-            "message": "Query Edited Successful",
+            "message": "Group Edited Successful",
             "status": 200,
             "data": {}
 
@@ -172,7 +155,7 @@ module.exports.setRouter = (app) => {
        @apiErrorExample {json} Error-Response:
 	 * {
 	    "error": true,
-	    "message": "Failed to edit query",
+	    "message": "Failed to edit group",
 	    "status": 500,
 	    "data": null
 	   }
@@ -188,17 +171,18 @@ module.exports.setRouter = (app) => {
 	/**
      * @apiGroup delete
      * @apiVersion  1.0.0
-     * @api {post} /api/v1/users/delete/query api for delete a query
+     * @api {post} /api/v1/users/delete/group api for delete a group.
      *
      * @apiParam {string} authToken send authToken. (body params) (required)
-	  * @apiParam {string} queryId send query id. (body params) (required)
+	  * @apiParam {string} groupId send group id. (body params) (required)
+     * @apiParam {string} expenseId send expense id. (body params) (required)
      *
      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
      * 
      * @apiSuccessExample {object} Success-Response:
          {
             "error": false,
-            "message": "query has deleted!",
+            "message": "Group has deleted!",
             "status": 200,
             "data": {}
 		
@@ -206,7 +190,7 @@ module.exports.setRouter = (app) => {
        @apiErrorExample {json} Error-Response:
 	 * {
 	    "error": true,
-	    "message": "Failed To Delete Query",
+	    "message": "Failed To Delete Group",
 	    "status": 500,
 	    "data": null
 	   }

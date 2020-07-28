@@ -1,5 +1,3 @@
-const express = require('express');
-const router = express.Router();
 const messageController = require('./../../app/controllers/messageController');
 const appConfig = require('./../../config/appConfig');
 const tokenAuth = require('../middlewares/tokenAuth');
@@ -9,7 +7,7 @@ module.exports.setRouter = (app) => {
 
 	// defining routes.
 
-	//params: authToken, message, senderName, senderId, queryId
+	//params: authToken, message, senderName, senderId, groupId
 	app.post(
 		`${baseUrl}/create/message`,
 		tokenAuth.isAuthorized,
@@ -21,10 +19,10 @@ module.exports.setRouter = (app) => {
        * @api {post} /api/v1/users/create/message api to create a new message
        *
        *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)
-       *@apiParam {String} senderId sender id to create a new mesage.(Send senderId as a body parameter)
+       *@apiParam {String} senderId sender id to create a new message.(Send senderId as a body parameter)
        *@apiParam {String} message message to create a new mesage.(Send message as a body parameter)
        *@apiParam {String} senderName sender name to create a new mesage.(Send senderName as a body parameter)
-       *@apiParam {String} queryId query Id to create a new mesage.(Send senderId as a body parameter)
+       *@apiParam {String} groupId group Id to create a new message.(Send senderId as a body parameter)
        *@apiSuccess {object} myResponse shows error status, message, http status code, result.
        * 
        *@apiSuccessExample {object} Success-Response:
@@ -35,7 +33,7 @@ module.exports.setRouter = (app) => {
            "data": {
                createdOn:2020-06-20T00:56:22.000+00:00
                messageId:"7GpzIZ5jc"
-               queryId:"7GpzIZpld"
+               groupId:"7GpzIZpld"
                message:"edited"
                senderName:"abhishek"
                senderId:"Sw-vulMJ6"
@@ -50,7 +48,7 @@ module.exports.setRouter = (app) => {
        }
       */
 
-	//params: authToken, queryId, skip
+	//params: authToken, groupId, skip
 	app.post(
 		`${baseUrl}/get/ten/message`,
 		tokenAuth.isAuthorized,
@@ -62,19 +60,19 @@ module.exports.setRouter = (app) => {
        * @api {post} /api/v1/users/get/ten/message api to get ten message
        *
        *@apiParam {String} authToken The token for authentication.(Send authToken as a body parameter)
-       *@apiParam {String} queryId query id to get all message.(Send userId as a body parameter)
+       *@apiParam {String} groupId group id to get ten message.(Send groupId as a body parameter)
        *@apiParam {Number} skip to get next 10 message.(skip as a body parameter)
        *@apiSuccess {object} myResponse shows error status, message, http status code, result.
        * 
        *@apiSuccessExample {object} Success-Response:
              {
            "error": false,
-           "message": "Ten notification Found Successfully",
+           "message": "Ten message Found Successfully",
            "status": 200,
            "data": [{
                createdOn:2020-06-20T00:56:22.000+00:00
                messageId:"7GpzIZ5jc"
-               queryId:"7GpzIZpld"
+               groupId:"7GpzIZpld"
                message:"edited"
                senderName:"abhishek"
                senderId:"Sw-vulMJ6"
